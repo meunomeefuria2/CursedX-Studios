@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>CursedX Studios - Executors & Malware</title>
+    <title>CursedX Studios - Executors, Malware, & Games</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
         body {
@@ -39,7 +39,7 @@
             text-decoration: none;
             font-weight: 600;
             font-size: 1.1rem;
-            margin: 0 1rem;
+            margin: 0 0.8rem;
             padding: 0.5rem 1.3rem;
             border-radius: 8px;
             transition: background 0.2s, color 0.2s;
@@ -89,39 +89,29 @@
             margin-bottom: 0.6rem;
             font-size: 1.3rem;
         }
-        .requirements {
-            color: #ffe066;
-            background: #1a2d52;
+        .requirements, .unc-warning, .bug-warning, .virus-warning {
             border-radius: 8px;
             padding: 0.7rem 1rem;
             margin-bottom: 1rem;
             font-size: 1rem;
         }
+        .requirements {
+            color: #ffe066;
+            background: #1a2d52;
+        }
         .unc-warning {
             color: #67b7ff;
             background: #10264d;
-            border-radius: 8px;
-            padding: 0.7rem 1rem;
-            margin-bottom: 1rem;
-            font-size: 1rem;
             border-left: 5px solid #349cff;
         }
         .bug-warning {
             color: #ff6b6b;
             background: #2d1622;
-            border-radius: 8px;
-            padding: 0.7rem 1rem;
-            margin-bottom: 1rem;
-            font-size: 1rem;
             border-left: 5px solid #ff6b6b;
         }
         .virus-warning {
             color: #ff6b6b;
             background: #2d1622;
-            border-radius: 8px;
-            padding: 0.7rem 1rem;
-            margin-bottom: 1rem;
-            font-size: 1rem;
             border-left: 5px solid #ff6b6b;
         }
         .btn-download {
@@ -143,6 +133,74 @@
             background: #1471c9;
             box-shadow: 0 4px 12px #349cff33;
         }
+        /* Games Area */
+        .games-section {
+            margin: 2.5rem auto;
+            max-width: 480px;
+            background: #153c6c;
+            border-radius: 18px;
+            box-shadow: 0 6px 32px #0a1833cc;
+            padding: 2.2rem 1.5rem 2.5rem 1.5rem;
+        }
+        .games-title {
+            color: #99d7ff;
+            font-size: 1.6rem;
+            margin-bottom: 1.2rem;
+            border-left: 5px solid #67b7ff;
+            padding-left: 1rem;
+        }
+        .game-form label {
+            display: block;
+            margin: 0.7rem 0 0.3rem 0.1rem;
+            font-size: 1.05rem;
+            color: #aad8ff;
+        }
+        .game-form input {
+            background: #19406e;
+            border: 1px solid #205493;
+            border-radius: 8px;
+            color: #fff;
+            padding: 0.6rem 1rem;
+            width: 100%;
+            font-size: 1rem;
+            margin-bottom: 1rem;
+        }
+        .game-form button {
+            background: #67b7ff;
+            color: #123a6d;
+            border: none;
+            border-radius: 8px;
+            padding: 0.7rem 1.4rem;
+            font-size: 1.07rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background 0.2s, color 0.2s;
+        }
+        .game-form button:hover {
+            background: #349cff;
+            color: #fff;
+        }
+        .game-lobby-info {
+            margin-top: 1.2rem;
+            background: #205493;
+            color: #fffbe6;
+            border-radius: 8px;
+            padding: 1.1rem 1rem;
+            font-size: 1.09rem;
+            text-align: center;
+        }
+        .uno-area {
+            margin-top: 2rem;
+            text-align: center;
+        }
+        .uno-placeholder {
+            background: #19406e;
+            color: #fff;
+            padding: 1.3rem;
+            border-radius: 12px;
+            margin-top: 1.1rem;
+            font-size: 1.02rem;
+        }
         footer {
             background: #123a6d;
             color: #8cb4e0;
@@ -152,8 +210,8 @@
             font-size: 0.97rem;
             letter-spacing: 1px;
         }
-        @media (max-width: 600px) {
-            .catalog-section {
+        @media (max-width: 700px) {
+            .catalog-section, .games-section {
                 padding: 1rem 0.5rem 1rem 0.5rem;
                 margin: 1.3rem 0.3rem;
             }
@@ -163,20 +221,76 @@
         function showSection(id) {
             document.getElementById('executors').style.display = (id === 'executors') ? 'block' : 'none';
             document.getElementById('malware').style.display = (id === 'malware') ? 'block' : 'none';
+            document.getElementById('games').style.display = (id === 'games') ? 'block' : 'none';
             document.getElementById('nav-executors').classList.toggle('active', id === 'executors');
             document.getElementById('nav-malware').classList.toggle('active', id === 'malware');
+            document.getElementById('nav-games').classList.toggle('active', id === 'games');
         }
         window.onload = function() { showSection('executors'); }
+
+        // --- Simple Lobby System for Uno ---
+        let lobbies = {};
+        function generateLobbyId() {
+            return Math.floor(100000 + Math.random() * 900000).toString();
+        }
+        function createLobby(event) {
+            event.preventDefault();
+            const username = document.getElementById('uno-username-create').value.trim();
+            if (!username) {
+                alert("Please enter a username.");
+                return;
+            }
+            const lobbyId = generateLobbyId();
+            lobbies[lobbyId] = [username];
+            showLobbyInfo(lobbyId, username, true);
+        }
+        function joinLobby(event) {
+            event.preventDefault();
+            const username = document.getElementById('uno-username-join').value.trim();
+            const lobbyId = document.getElementById('uno-lobby-id').value.trim();
+            if (!username || !lobbyId) {
+                alert("Please enter both a username and lobby ID.");
+                return;
+            }
+            if (!lobbies[lobbyId]) {
+                alert("Lobby not found.");
+                return;
+            }
+            if (lobbies[lobbyId].indexOf(username) !== -1) {
+                alert("Username already taken in this lobby.");
+                return;
+            }
+            lobbies[lobbyId].push(username);
+            showLobbyInfo(lobbyId, username, false);
+        }
+        function showLobbyInfo(lobbyId, username, isOwner) {
+            document.getElementById('uno-lobby-create-form').style.display = 'none';
+            document.getElementById('uno-lobby-join-form').style.display = 'none';
+            document.getElementById('uno-lobby-info').style.display = 'block';
+            document.getElementById('uno-lobby-id-show').innerText = lobbyId;
+            document.getElementById('uno-lobby-username-show').innerText = username;
+            document.getElementById('uno-lobby-players-list').innerText = lobbies[lobbyId].join(', ');
+            document.getElementById('uno-lobby-owner').innerText = isOwner ? "Owner" : "Player";
+            // Placeholder for game start: You can expand here!
+            document.getElementById('uno-game-area').style.display = 'block';
+        }
+        function leaveLobby() {
+            document.getElementById('uno-lobby-create-form').style.display = 'block';
+            document.getElementById('uno-lobby-join-form').style.display = 'block';
+            document.getElementById('uno-lobby-info').style.display = 'none';
+            document.getElementById('uno-game-area').style.display = 'none';
+        }
     </script>
 </head>
 <body>
     <header>
         <h1>CursedX Studios</h1>
-        <div class="subtitle">Your hub for fast and secure script executors & malware miscs.</div>
+        <div class="subtitle">Your hub for executors, malware miscs, and multiplayer games with friends.</div>
     </header>
     <nav>
         <a href="#" class="nav-link active" id="nav-executors" onclick="showSection('executors'); return false;">EXECUTORS</a>
         <a href="#" class="nav-link" id="nav-malware" onclick="showSection('malware'); return false;">MALWARE MISCS</a>
+        <a href="#" class="nav-link" id="nav-games" onclick="showSection('games'); return false;">GAMES</a>
     </nav>
     <main>
         <!-- Executors Section -->
@@ -225,6 +339,42 @@
                 <a class="btn-download" href="FREEROBUX.rar" download>
                     Download Free Robux
                 </a>
+            </div>
+        </section>
+        <!-- Games Section -->
+        <section class="games-section" id="games" style="display:none;">
+            <div class="games-title">Multiplayer Games Lobby</div>
+            <div>
+                <div id="uno-lobby-create-form" class="game-form">
+                    <label for="uno-username-create">Username</label>
+                    <input type="text" id="uno-username-create" maxlength="16" placeholder="Your username">
+                    <button onclick="createLobby(event)">Create UNO Lobby</button>
+                </div>
+                <div style="margin:0.8rem 0;text-align:center;color:#aad8ff;">or</div>
+                <div id="uno-lobby-join-form" class="game-form">
+                    <label for="uno-username-join">Username</label>
+                    <input type="text" id="uno-username-join" maxlength="16" placeholder="Your username">
+                    <label for="uno-lobby-id">Lobby ID</label>
+                    <input type="text" id="uno-lobby-id" maxlength="8" placeholder="Enter lobby ID">
+                    <button onclick="joinLobby(event)">Join UNO Lobby</button>
+                </div>
+                <div id="uno-lobby-info" class="game-lobby-info" style="display:none;">
+                    <div>
+                        <b>Lobby ID:</b> <span id="uno-lobby-id-show"></span><br>
+                        <b>Your Username:</b> <span id="uno-lobby-username-show"></span><br>
+                        <b>Your Role:</b> <span id="uno-lobby-owner"></span><br>
+                        <b>Players in Lobby:</b> <span id="uno-lobby-players-list"></span>
+                    </div>
+                    <button style="margin-top:1.1rem;background:#ff6b6b;color:#fff;" onclick="leaveLobby()">Leave Lobby</button>
+                </div>
+                <div id="uno-game-area" class="uno-area" style="display:none;">
+                    <div class="uno-placeholder">
+                        UNO multiplayer game coming soon!<br>
+                        Play with your friends by sharing the Lobby ID.<br>
+                        Only multiplayer mode is supported.<br>
+                        <b>Note:</b> You can choose any username.
+                    </div>
+                </div>
             </div>
         </section>
     </main>
